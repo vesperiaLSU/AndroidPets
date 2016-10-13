@@ -1,10 +1,13 @@
 package android.pets;
 
+import android.content.ContentValues;
 import android.data.PetContract;
+import android.data.PetsDbHelper;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import android.data.PetContract.PetEntry;
+import android.widget.Toast;
 
 /**
  * Allows user to create a new pet or edit an existing one.
@@ -105,7 +109,10 @@ public class EditorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // Do nothing for now
+                // save pet to database
+                insertPet();
+                // exit activity
+                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -118,5 +125,27 @@ public class EditorActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertPet() {
+        String name = mNameEditText.getText().toString().trim();
+        String breed = mBreedEditText.getText().toString().trim();
+        int weight = Integer.parseInt(mWeightEditText.getText().toString().trim());
+
+        PetsDbHelper dbHelper = new PetsDbHelper(this);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PetEntry.COLUMN_PET_NAME, name);
+        contentValues.put(PetEntry.COLUMN_PET_BREED, breed);
+        contentValues.put(PetEntry.COLUMN_PET_GENDER, mGender);
+        contentValues.put(PetEntry.COLUMN_PET_WEIGHT, weight);
+
+        long newRowId = dbHelper.getReadableDatabase().insert(PetEntry.TABLE_NAME, null, contentValues);
+        Log.v("EditorActivity", "New row ID " + newRowId);
+
+        if (newRowId == -1) {
+            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -18,14 +18,14 @@ public final class PetContract {
     public static final class PetEntry implements BaseColumns {
 
         // table name
-        final static String TABLE_NAME = "pets";
+        public final static String TABLE_NAME = "pets";
 
         // column names
         final static String _ID = BaseColumns._ID;
-        final static String COLUMN_PET_NAME = "name";
-        final static String COLUMN_PET_BREED = "breed";
-        final static String COLUMN_PET_GENDER = "gender";
-        final static String COLUMN_PET_WEIGHT = "weight";
+        public final static String COLUMN_PET_NAME = "name";
+        public final static String COLUMN_PET_BREED = "breed";
+        public final static String COLUMN_PET_GENDER = "gender";
+        public final static String COLUMN_PET_WEIGHT = "weight";
 
         // constants for gender
         public final static int GENDER_UNKNOWN = 0;

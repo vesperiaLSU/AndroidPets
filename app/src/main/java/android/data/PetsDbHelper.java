@@ -10,21 +10,16 @@ public class PetsDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "pets.db";
-    private static final String TEXT_TYPE = " integer";
-    private static final String INT_TYPE = " text";
-    private static final String DECIMAL_TYPE = " real";
-    private static final String NOT_NULL = " not null";
-    private static final String DEFAULT = " default";
-    private static final String COMMA_SEP = ",";
+    private static final String DATABASE_NAME = "shelter.db";
 
     // The SQL script
     private static final String SQL_CREATE_ENTRIES =
-            "create table " + PetEntry.TABLE_NAME + " (" + PetEntry._ID + INT_TYPE + NOT_NULL + " primary key autoincrement" + COMMA_SEP
-            + PetEntry.COLUMN_PET_NAME + TEXT_TYPE + NOT_NULL + COMMA_SEP
-            + PetEntry.COLUMN_PET_BREED + TEXT_TYPE + COMMA_SEP
-            + PetEntry.COLUMN_PET_GENDER + INT_TYPE + NOT_NULL + DEFAULT + " 0" + COMMA_SEP
-            + PetEntry.COLUMN_PET_WEIGHT + DECIMAL_TYPE + ")";
+            "create table " + PetEntry.TABLE_NAME + " ("
+            + PetEntry._ID + " integer primary key autoincrement,"
+            + PetEntry.COLUMN_PET_NAME + " text not null,"
+            + PetEntry.COLUMN_PET_BREED + " text,"
+            + PetEntry.COLUMN_PET_GENDER + " integer not null default 0,"
+            + PetEntry.COLUMN_PET_WEIGHT + " real not null default 0)";
 
     private static final String SQL_DELETE_ENTRIES = "drop table if exists " + PetEntry.TABLE_NAME;
 
