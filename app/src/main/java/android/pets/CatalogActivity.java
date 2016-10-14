@@ -20,6 +20,9 @@ import android.widget.TextView;
  */
 public class CatalogActivity extends AppCompatActivity {
 
+    /**
+     * The Pets database helper instance that will be used throughout this activity
+     */
     private PetsDbHelper dbHelper;
 
     @Override
@@ -38,7 +41,6 @@ public class CatalogActivity extends AppCompatActivity {
         });
 
         dbHelper = new PetsDbHelper(this);
-        displayDatabaseInfo();
     }
 
     @Override
@@ -80,11 +82,55 @@ public class CatalogActivity extends AppCompatActivity {
         // Create a new/ open an existing database
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("select * from" + PetEntry.TABLE_NAME, null);
+        String[] projection = new String[]{
+                PetEntry._ID,
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED,
+                PetEntry.COLUMN_PET_GENDER,
+                PetEntry.COLUMN_PET_WEIGHT
+        };
+
+        // Get the cursor that represents rows of data returned by the query
+        Cursor cursor = db.query(PetEntry.TABLE_NAME, projection, null, null, null, null, null);
+
         try {
             TextView displayView = (TextView) findViewById(R.id.text_view_pet);
             displayView.setText(String.format(getString(R.string.counts_in_db), cursor.getCount()));
+
+            // Create a header in the text view
+
+            displayView.append(PetEntry._ID + " - " +
+                    PetEntry.COLUMN_PET_NAME + " - " +
+                    PetEntry.COLUMN_PET_BREED + " - " +
+                    PetEntry.COLUMN_PET_GENDER + " - " +
+                    PetEntry.COLUMN_PET_WEIGHT + "\n"
+            );
+
+            // Figure out the index of each column
+            int idColumnIndex = cursor.getColumnIndex(PetEntry._ID);
+            int nameColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME);
+            int breedColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED);
+            int genderColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_GENDER);
+            int weightColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT);
+
+            // Iterate through all the returned rows in the cursor
+            while (cursor.moveToNext()) {
+                int currentId = cursor.getInt(idColumnIndex);
+                String currentName = cursor.getString(nameColumnIndex);
+                String currentBreed = cursor.getString(breedColumnIndex);
+                int currentGender = cursor.getInt(genderColumnIndex);
+                double currentWeight = cursor.getDouble(weightColumnIndex);
+
+                // Display the values from each column of the current row in the TextView
+                displayView.append("\n" + currentId + " - " +
+                        currentName + " - " +
+                        currentBreed + " - " +
+                        String.valueOf(currentGender) + " - " +
+                        String.valueOf(currentWeight)
+                );
+            }
         } finally {
+            // always close the cursor to avoid memory leak
             cursor.close();
         }
     }
