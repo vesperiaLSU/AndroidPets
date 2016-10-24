@@ -1,5 +1,6 @@
 package android.data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,15 +8,23 @@ import android.provider.BaseColumns;
  * it cannot be extended
  */
 public final class PetContract {
-    /**
-     * Private constructor so that this class cannot be instantiated
-     */
+
+    //Private constructor so that this class cannot be instantiated
     private PetContract() {}
+
+    public static final String CONTENT_AUTHORITY = "com.android.pets";
+
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    public static final String PATH_PETS = "pets";
 
     /**
      * Inner class that define the schema for pets table
      */
     public static final class PetEntry implements BaseColumns {
+
+        // content uri
+        public final static Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PETS);
 
         // table name
         public final static String TABLE_NAME = "pets";
